@@ -1,13 +1,16 @@
 package pkgPoker.app.model;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javafx.scene.control.ToggleButton;
 import netgame.common.Hub;
 import pkgPokerBLL.Action;
 import pkgPokerBLL.Card;
@@ -47,7 +50,7 @@ public class PokerHub extends Hub {
 	}
 
 	protected void messageReceived(int ClientID, Object message) {
-
+		Rule rle = null;
 		if (message instanceof Action) {
 			Player actPlayer = (Player) ((Action) message).getPlayer();
 			Action act = (Action) message;
@@ -68,22 +71,32 @@ public class PokerHub extends Hub {
 				break;
 			case StartGame:
 				// Get the rule from the Action object.
-				Rule rle = new Rule(act.geteGame());
+				rle = new Rule(act.geteGame());
 				
 				//TODO Lab #5 - If neither player has 'the button', pick a random player
 				//		and assign the button.				
-
+				
 				//TODO Lab #5 - Start the new instance of GamePlay
-								
+				
+				 //whoever presses play is the dealer
+				UUID dealerID = actPlayer.getPlayerID();
+				GamePlay game = new GamePlay(rle, dealerID );
+				
 				// Add Players to Game
+				HubGamePlay.setGamePlayers(HubPokerTable.getHmPlayer());
 				
 				// Set the order of players
-				
+				int[] order = {1,2};
+				game.setiActOrder(order);
 
 
 			case Draw:
+				this.iDealNbr+=1;
 
+				rle.GetDrawCard(eDrawCount.FIRST);
+				
 				//TODO Lab #5 -	Draw card(s) for each player in the game.
+				
 				//TODO Lab #5 -	Make sure to set the correct visiblity
 				//TODO Lab #5 -	Make sure to account for community cards
 

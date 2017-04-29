@@ -1,3 +1,4 @@
+/*
 package pkgPokerBLL;
 
 import static org.junit.Assert.assertFalse;
@@ -455,4 +456,4 @@ public class Hand_Test {
 		assertTrue(h.getHandScore().getHandStrength() == eHandStrength.HighCard);
 		assertTrue(h.getHandScore().getHiHand() == eRank.KING);
 	}
-}
+}*/
