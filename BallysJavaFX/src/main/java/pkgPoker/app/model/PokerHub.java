@@ -92,14 +92,23 @@ public class PokerHub extends Hub {
 
 			case Draw:
 				this.iDealNbr+=1;
-
-				rle.GetDrawCard(eDrawCount.FIRST);
-				
 				//TODO Lab #5 -	Draw card(s) for each player in the game.
-				
+				for(int i = 1; i <= rle.GetMaxDrawCount(); i++ ){
+					if(i == 1) {rle.GetDrawCard(eDrawCount.FIRST);
+					HubGamePlay.seteDrawCountLast(eDrawCount.SECOND);}
+					else if(i == 2) {rle.GetDrawCard(eDrawCount.SECOND);
+					HubGamePlay.seteDrawCountLast(eDrawCount.THIRD);}
+					else if(i == 3) {rle.GetDrawCard(eDrawCount.THIRD);
+					HubGamePlay.seteDrawCountLast(eDrawCount.FOURTH);}
+					else if(i == 4) {rle.GetDrawCard(eDrawCount.FOURTH);
+					HubGamePlay.seteDrawCountLast(eDrawCount.FIFTH);}
+					else if(i == 5) {rle.GetDrawCard(eDrawCount.FIFTH);
+					HubGamePlay.seteDrawCountLast(eDrawCount.SIXTH);}
+					else {rle.GetDrawCard(eDrawCount.SIXTH);
+					HubGamePlay.seteDrawCountLast(eDrawCount.SEVENTH);}
+				}
 				//TODO Lab #5 -	Make sure to set the correct visiblity
 				//TODO Lab #5 -	Make sure to account for community cards
-
 				//TODO Lab #5 -	Check to see if the game is over
 				HubGamePlay.isGameOver();
 				
