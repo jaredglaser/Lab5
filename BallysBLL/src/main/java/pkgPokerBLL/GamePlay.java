@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import pkgPokerEnum.eCardDestination;
+import pkgPokerEnum.eCardVisibility;
 import pkgPokerEnum.eDrawCount;
 import pkgPokerEnum.eGameState;
 
@@ -151,14 +152,64 @@ public class GamePlay implements Serializable {
 		GameDeck = gameDeck;
 	}
 
-	public void drawCard(Player p, eCardDestination eCardDestination)  {
-		if (eCardDestination == eCardDestination.Player) {
-			this.getPlayerHand(p).AddToCardsInHand(this.getGameDeck().Draw());
-		} else if (eCardDestination == eCardDestination.Community) {
-			this.getGameCommonHand().AddToCardsInHand(this.getGameDeck().Draw());
+	public void drawCard(Player p, eCardDestination eCardDestination, eCardVisibility eVisible)  {
+		//TODO Lab #5 -	Make sure to set the correct visiblity
+		Card card = null;
+		card = this.getGameDeck().Draw(); //grab a card
+		if (eCardDestination == eCardDestination.Player) { //goes to player?
+			if(eVisible.equals(eVisible.VisibleEveryone))
+				card.setVisible(true);
+			else{
+				card.setVisible(false);
+			}
+			this.getPlayerHand(p).AddToCardsInHand(card); //add it
+		} else if (eCardDestination == eCardDestination.Community) {//goes to community?
+			if(eVisible.equals(eVisible.VisibleEveryone))
+				card.setVisible(true);
+			else{
+				card.setVisible(false);
+			}
+			this.getGameCommonHand().AddToCardsInHand(card); //add it
 		}
 	}
 
+	public GamePlay handleDraw(int iDealNbr){
+		CardDraw temp = null;
+		//TODO Lab #5 -	Draw card(s) for each player in the game.
+
+		if(iDealNbr == 1) {temp = rle.GetDrawCard(eDrawCount.FIRST);
+		this.seteDrawCountLast(eDrawCount.FIRST);}
+		else if(iDealNbr == 2) {temp = rle.GetDrawCard(eDrawCount.SECOND);
+		this.seteDrawCountLast(eDrawCount.SECOND);}
+		else if(iDealNbr == 3) {temp = rle.GetDrawCard(eDrawCount.THIRD);
+		this.seteDrawCountLast(eDrawCount.THIRD);}
+		else if(iDealNbr == 4) {temp = rle.GetDrawCard(eDrawCount.FOURTH);
+		this.seteDrawCountLast(eDrawCount.FOURTH);}
+		else if(iDealNbr== 5) {temp = rle.GetDrawCard(eDrawCount.FIFTH);
+		this.seteDrawCountLast(eDrawCount.FIFTH);}
+		else {temp = rle.GetDrawCard(eDrawCount.SIXTH);
+		this.seteDrawCountLast(eDrawCount.SIXTH);}
+
+		for(int i = 0; i < temp.getCardCount().ordinal(); i++){
+			if(temp.getCardDestination().equals(eCardDestination.Player)){
+				Iterator it = this.getGamePlayers().entrySet().iterator();
+				while (it.hasNext()) {
+					Map.Entry pair = (Map.Entry)it.next();
+					Player p = (Player) pair.getValue();
+					it.remove(); // avoids a ConcurrentModificationException
+
+					this.drawCard(p,eCardDestination.Player,temp.getCardVisibility());
+				}
+			}
+			//TODO Lab #5 -	Make sure to account for community cards
+			else if(temp.getCardDestination().equals(eCardDestination.Community)){
+				this.drawCard(PlayerCommon, eCardDestination.Community,temp.getCardVisibility());
+			}
+		}
+		
+
+		return this;
+	}
 	public UUID getGameDealer() {
 		return GameDealer;
 	}

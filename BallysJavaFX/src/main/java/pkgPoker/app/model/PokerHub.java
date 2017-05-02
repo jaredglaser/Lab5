@@ -51,6 +51,7 @@ public class PokerHub extends Hub {
 
 	protected void messageReceived(int ClientID, Object message) {
 		Rule rle = null;
+		
 		if (message instanceof Action) {
 			Player actPlayer = (Player) ((Action) message).getPlayer();
 			Action act = (Action) message;
@@ -80,35 +81,21 @@ public class PokerHub extends Hub {
 				
 				 //whoever presses play is the dealer
 				UUID dealerID = actPlayer.getPlayerID();
-				GamePlay game = new GamePlay(rle, dealerID );
+				HubGamePlay = new GamePlay(rle, dealerID );
 				
 				// Add Players to Game
 				HubGamePlay.setGamePlayers(HubPokerTable.getHmPlayer());
 				
 				// Set the order of players
 				int[] order = {1,2};
-				game.setiActOrder(order);
+				HubGamePlay.setiActOrder(order);
 
 
 			case Draw:
 				this.iDealNbr+=1;
-				//TODO Lab #5 -	Draw card(s) for each player in the game.
-				for(int i = 1; i <= rle.GetMaxDrawCount(); i++ ){
-					if(i == 1) {rle.GetDrawCard(eDrawCount.FIRST);
-					HubGamePlay.seteDrawCountLast(eDrawCount.SECOND);}
-					else if(i == 2) {rle.GetDrawCard(eDrawCount.SECOND);
-					HubGamePlay.seteDrawCountLast(eDrawCount.THIRD);}
-					else if(i == 3) {rle.GetDrawCard(eDrawCount.THIRD);
-					HubGamePlay.seteDrawCountLast(eDrawCount.FOURTH);}
-					else if(i == 4) {rle.GetDrawCard(eDrawCount.FOURTH);
-					HubGamePlay.seteDrawCountLast(eDrawCount.FIFTH);}
-					else if(i == 5) {rle.GetDrawCard(eDrawCount.FIFTH);
-					HubGamePlay.seteDrawCountLast(eDrawCount.SIXTH);}
-					else {rle.GetDrawCard(eDrawCount.SIXTH);
-					HubGamePlay.seteDrawCountLast(eDrawCount.SEVENTH);}
-				}
-				//TODO Lab #5 -	Make sure to set the correct visiblity
-				//TODO Lab #5 -	Make sure to account for community cards
+				
+				HubGamePlay = HubGamePlay.handleDraw(this.iDealNbr);
+				
 				//TODO Lab #5 -	Check to see if the game is over
 				HubGamePlay.isGameOver();
 				

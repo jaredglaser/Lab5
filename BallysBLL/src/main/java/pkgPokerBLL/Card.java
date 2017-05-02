@@ -11,6 +11,7 @@ public class Card implements Comparable {
 	private eSuit eSuit;
 	private int iCardNbr;
 	private boolean Wild;
+	private boolean isVisible;
 
 	public Card() {
 	}
@@ -61,6 +62,14 @@ public class Card implements Comparable {
 		Card c = (Card) o;
 		return c.geteRank().compareTo(this.geteRank());
 
+	}
+
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
 	}
 
 	public static Comparator<Card> CardRank = new Comparator<Card>() {

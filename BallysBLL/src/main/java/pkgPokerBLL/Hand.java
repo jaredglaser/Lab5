@@ -18,6 +18,7 @@ public class Hand {
 	
 	private UUID HandId;
 	private Player HandPlayer;	
+	
 	private boolean bIsScored;
 	private HandScore HS;
 	private ArrayList<Card> CardsInHand = new ArrayList<Card>();
@@ -25,7 +26,10 @@ public class Hand {
 	public Hand() {
 
 	}
-	
+	public Player getHandPlayer() {
+		return HandPlayer;
+	}
+
 	public Hand(Player handPlayer, UUID HandID) {
 		
 		this.HandId = (HandID == null) ? UUID.randomUUID() : HandID;		

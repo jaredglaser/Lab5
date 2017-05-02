@@ -23,9 +23,12 @@ import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import pkgPoker.app.MainApp;
 import pkgPokerEnum.eAction;
+import pkgPokerEnum.eCardDestination;
 import pkgPokerEnum.eGame;
 import pkgPokerBLL.Action;
+import pkgPokerBLL.Card;
 import pkgPokerBLL.GamePlay;
+import pkgPokerBLL.Hand;
 import pkgPokerBLL.Player;
 import pkgPokerBLL.Table;
 
@@ -219,7 +222,55 @@ public class PokerTableController implements Initializable {
 	}
 
 	public void Handle_GameState(GamePlay HubPokerGame) {
-
+		Iterator it = HubPokerGame.getPlayersHands().entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry)it.next();
+			Hand h = (Hand) pair.getValue();
+			it.remove(); // avoids a ConcurrentModificationException
+			//handle players
+			Player p = h.getHandPlayer();
+			for (Card c: h.getCardsInHand()){
+				if(mainApp.getPlayer().equals(p)){ //if the current player's hand belongs to who is playing
+					   								//then let them see their cards
+					if(p.getiPlayerPosition() == 1){
+						hboxP1Cards.getChildren().add(BuildImage(c.getiCardNbr()));
+					}
+					else{
+						hboxP2Cards.getChildren().add(BuildImage(c.getiCardNbr()));
+					}
+				}
+				else{
+					if(c.isVisible()){ //if the hand doesnt belong to the player, but the isvisible is true, then show it
+						if(p.getiPlayerPosition() == 1){
+							hboxP1Cards.getChildren().add(BuildImage(c.getiCardNbr()));
+						}
+						else{
+							hboxP2Cards.getChildren().add(BuildImage(c.getiCardNbr()));
+						}
+					}
+					else{ //otherwise show the back
+						BuildImage(0);
+						if(p.getiPlayerPosition() == 1){
+							hboxP1Cards.getChildren().add(BuildImage(0));
+						}
+						else{
+							hboxP2Cards.getChildren().add(BuildImage(0));
+						}
+					}
+				}
+				
+			}	
+		}
+		//handle community
+		for(Card c: HubPokerGame.getGameCommonHand().getCardsInHand()){
+			if(c.isVisible()){ //if the hand doesnt belong to the player, but the isvisible is true, then show it
+				hboxCommunity.getChildren().add(BuildImage(c.getiCardNbr()));
+			}
+			else{ //otherwise show it
+				hboxCommunity.getChildren().add(BuildImage(0));
+			}
+		}
+		
 	}
 
 	private ImageView BuildImage(int iCardNbr) {
