@@ -157,7 +157,7 @@ public class GamePlay implements Serializable {
 		Card card = null;
 		card = this.getGameDeck().Draw(); //grab a card
 		if (eCardDestination == eCardDestination.Player) { //goes to player?
-			if(eVisible.equals(eVisible.VisibleEveryone))
+			if(eVisible.equals(eCardVisibility.VisibleEveryone))
 				card.setVisible(true);
 			else{
 				card.setVisible(false);
